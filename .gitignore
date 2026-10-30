@@ -1,0 +1,23 @@
+# Competition pack files: not our code, not committed (README "Setup" says where to put them)
+data/
+models/
+evaluate.py
+baseline/
+download_models.py
+MODELS.md
+sample_submission.jsonl
+PACK_README.md
+
+# Environments, caches and build outputs
+.env
+.venv/
+**/.venv/
+node_modules/
+__pycache__/
+*.pyc
+.idea/
+FULL_CODE/artifacts/
+*.zip
+*.partial
+
+# submission/*.jsonl IS committed: do not add *.jsonl here

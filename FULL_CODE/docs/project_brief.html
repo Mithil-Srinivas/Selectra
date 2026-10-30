@@ -1,0 +1,549 @@
+<title>Selectra Team Brief</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~68ch) on a quiet page; figures and tables widen to 1000px. Navy + one blue, as in the app. */
+:root {
+  --paper: #FFFFFF;
+  --wash: #F2F5FA;
+  --ink: #0E1B2C;
+  --muted: #56677F;
+  --rule: #D8E0EB;
+  --navy: #0B1F3A;
+  --accent: #1D4ED8;
+  --accent-soft: #E6EDFC;
+  --ok: #047857;
+  --bad: #B42318;
+  --bar-raw: #A9B6C8;
+  --bar-llm: #93B4F5;
+  --font-display: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.4rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0A1322; --wash: #111C2F; --ink: #E4EBF5; --muted: #98A8BF; --rule: #24344D;
+    --navy: #DCE6F7; --accent: #7EA6FF; --accent-soft: #16264A; --ok: #4ADE9B; --bad: #FF8A80;
+    --bar-raw: #4A5A73; --bar-llm: #3A5FA8;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0A1322; --wash: #111C2F; --ink: #E4EBF5; --muted: #98A8BF; --rule: #24344D;
+  --navy: #DCE6F7; --accent: #7EA6FF; --accent-soft: #16264A; --ok: #4ADE9B; --bad: #FF8A80;
+  --bar-raw: #4A5A73; --bar-llm: #3A5FA8;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 var(--step-0)/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 1000px; margin: 0 auto; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 44px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--font-display); color: var(--navy); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: var(--step-3); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: var(--step-2); font-weight: 600; letter-spacing: -0.01em; }
+h3 { font-size: var(--step-1); font-weight: 600; }
+p { margin: 0; }
+code, .mono { font-family: var(--font-mono); font-size: 0.88em; }
+.eyebrow { font: 500 var(--step--1)/1.4 var(--font-mono); color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.lede { font-size: 1.125rem; color: var(--ink); max-width: 64ch; }
+header { display: flex; flex-direction: column; gap: 14px; padding-bottom: 28px; border-bottom: 1px solid var(--rule); }
+
+.formula {
+  font-family: var(--font-mono); font-size: 0.95rem; background: var(--wash); border: 1px solid var(--rule);
+  border-radius: 8px; padding: 14px 16px; overflow-x: auto; white-space: nowrap; color: var(--navy);
+}
+.rule-statement {
+  font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; color: var(--navy);
+  border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; max-width: 60ch;
+}
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px 24px; }
+.facts div { display: flex; flex-direction: column; gap: 2px; }
+.facts b { font: 600 var(--step-1)/1.2 var(--font-display); color: var(--navy); font-variant-numeric: tabular-nums; }
+.facts span { color: var(--muted); font-size: var(--step--1); }
+
+figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.fig-scroll { overflow-x: auto; }
+figure svg { width: 100%; height: auto; display: block; color: var(--ink); }
+.fig-scroll svg { min-width: 680px; }
+figcaption { color: var(--muted); font-size: var(--step--1); max-width: 80ch; }
+figcaption b { color: var(--ink); font-weight: 600; }
+
+/* SVG parts, coloured from tokens so both themes work */
+.box { fill: var(--wash); stroke: var(--rule); stroke-width: 1.2; }
+.box.llm { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.box.end { fill: var(--paper); stroke: var(--navy); stroke-width: 1.4; }
+.dia { fill: var(--paper); stroke: var(--navy); stroke-width: 1.3; }
+.t { fill: var(--ink); font: 600 13.5px var(--font-body); }
+.ts { fill: var(--muted); font: 400 11.5px var(--font-body); }
+.tag { fill: var(--muted); font: 500 10.5px var(--font-mono); }
+.tag.llm { fill: var(--accent); }
+.tag.act { fill: var(--accent); font-weight: 500; }
+.g { fill: var(--ink); font: 400 12px var(--font-body); }
+.gs { fill: var(--muted); font: 400 11.5px var(--font-body); }
+.al { fill: var(--muted); font: 400 11px var(--font-mono); }
+.arrow { stroke: var(--muted); stroke-width: 1.3; fill: none; }
+.dash { stroke: var(--rule); stroke-width: 1.2; stroke-dasharray: 3 3; fill: none; }
+.dash.ret { stroke: var(--muted); }
+.ahead { fill: var(--muted); }
+
+/* results bars */
+.bars { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 14px 18px; align-items: center; }
+.bars .lbl { font-size: 0.92rem; color: var(--ink); }
+.bars .lbl small { display: block; color: var(--muted); font-size: var(--step--1); }
+.trio { display: flex; flex-direction: column; gap: 4px; }
+.bar { display: flex; align-items: center; gap: 8px; }
+.bar i { display: block; height: 12px; border-radius: 3px; min-width: 2px; }
+.bar.raw i { background: var(--bar-raw); }
+.bar.llm i { background: var(--bar-llm); }
+.bar.fin i { background: var(--accent); }
+.bar span { font: 500 var(--step--1) var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: var(--step--1); color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.table-wrap { overflow-x: auto; }
+th { text-align: left; font: 600 var(--step--1) var(--font-body); color: var(--muted); text-transform: uppercase;
+     letter-spacing: 0.05em; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule); }
+td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td:first-child { font-weight: 600; color: var(--navy); white-space: nowrap; }
+td.num { font-variant-numeric: tabular-nums; }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; }
+ul.tight, ol.tight { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 7px; }
+ul.tight li::marker { color: var(--accent); }
+.status { display: inline-block; font: 500 11px var(--font-mono); padding: 1px 7px; border-radius: 4px;
+          letter-spacing: 0.03em; text-transform: uppercase; }
+.status.done { color: var(--ok); border: 1px solid currentColor; }
+.status.next { color: var(--accent); border: 1px solid currentColor; }
+pre { margin: 0; background: var(--wash); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px;
+      overflow-x: auto; font: 400 0.84rem/1.6 var(--font-mono); color: var(--ink); }
+pre .c { color: var(--muted); }
+footer { color: var(--muted); font-size: var(--step--1); border-top: 1px solid var(--rule); padding-top: 16px; }
+
+@media (max-width: 560px) {
+  .bars { grid-template-columns: 1fr; gap: 6px 0; }
+  .bars .lbl { margin-top: 10px; }
+}
+@media print {
+  :root, :root[data-theme="dark"] {
+    color-scheme: light;
+    --paper: #FFFFFF; --wash: #F2F5FA; --ink: #0E1B2C; --muted: #56677F; --rule: #D8E0EB; --navy: #0B1F3A;
+    --accent: #1D4ED8; --accent-soft: #E6EDFC; --ok: #047857; --bad: #B42318; --bar-raw: #A9B6C8; --bar-llm: #93B4F5;
+  }
+  main { padding-block: 0; gap: 30px; }
+  figure, table, .bars, pre, .two > * { break-inside: avoid; }
+  h2 { break-after: avoid; }
+  .fig-scroll { overflow: visible; }
+  .fig-scroll svg { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<main>
+  <header>
+    <p class="eyebrow">R3 · The Conversational Shopping Assistant That Doesn't Lie · Team dino (1086) · 31 Oct 2026</p>
+    <h1>Selectra</h1>
+    <p class="lede">A product search and shopping assistant for a fixed 5,000-product catalogue and a 30-section store
+      policy. Shoppers write short, misspelt, often Hinglish questions. The assistant must answer, ask which product
+      they mean, or refuse, and every fact it states must come from the catalogue or the policy.</p>
+  </header>
+
+  <section>
+    <h2>What we are scored on</h2>
+    <p class="prose">Each of the 150 test questions needs one action: <code>answer</code>, <code>clarify</code> or
+      <code>refuse</code>. The official <code>evaluate.py</code> scores every question like this:</p>
+    <div class="formula">question_score = action_correct × (0.4 + 0.3 × grounded + 0.3 × helpful) − 3 × hallucinated_prices</div>
+    <div class="facts">
+      <div><b>−3</b><span>for every price not copied from the catalogue</span></div>
+      <div><b>≤ 10</b><span>cited products, or product credit is lost</span></div>
+      <div><b>0.73</b><span>baseline score on the 40 dev questions</span></div>
+      <div><b>20%</b><span>of judging is this score; the rest is framing, soundness, usability, responsibility, demo</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The rule everything follows</h2>
+    <p class="rule-statement">The LLM interprets the question. Code checks every fact against the catalogue. The catalogue decides.</p>
+    <p class="prose">The language model never sees a price and never writes one. It turns the shopper's words into a
+      structured search plan. Everything after that is deterministic code that reads the catalogue record, so any
+      value we show can be traced to a field in a specific product.</p>
+  </section>
+
+  <section>
+    <h2>How a question flows through the system</h2>
+    <figure>
+      <div class="fig-scroll">
+        <svg viewBox="0 0 880 730" role="img" aria-label="Pipeline: shopper message, name spell-check, LLM interpretation, code checks, dense search twice, rank fusion, sub-category grounding, evidence ledger, outcome, user interface. Each stage has a guard against made-up facts.">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" class="ahead" fill="#56677F"/>
+            </marker>
+          </defs>
+
+          <!-- stage boxes: x=24, w=330, h=50, every 72px -->
+          <rect class="box" x="24" y="16" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="37">Shopper message</text>
+          <text class="ts" x="40" y="55">“herbiqe astraair facewash kitne ka”</text>
+          <text class="tag" x="340" y="37" text-anchor="end">input</text>
+
+          <rect class="box" x="24" y="88" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="109">Name spell-check</text>
+          <text class="ts" x="40" y="127">RapidFuzz vs 51 brands and 963 line names</text>
+          <text class="tag" x="340" y="109" text-anchor="end">code</text>
+
+          <rect class="box llm" x="24" y="160" width="330" height="50" rx="8" fill="#E6EDFC"/>
+          <text class="t" x="40" y="181">LLM interpretation</text>
+          <text class="ts" x="40" y="199">Qwen3.5-9B returns a JSON search plan</text>
+          <text class="tag llm" x="340" y="181" text-anchor="end">LLM</text>
+
+          <rect class="box" x="24" y="232" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="253">Code checks on the plan</text>
+          <text class="ts" x="40" y="271">numbers, colours, catalogue values</text>
+          <text class="tag" x="340" y="253" text-anchor="end">code</text>
+
+          <rect class="box" x="24" y="304" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="325">Dense search, run twice</text>
+          <text class="ts" x="40" y="343">raw text and LLM phrase vs 5,000 products</text>
+          <text class="tag" x="340" y="325" text-anchor="end">embedding</text>
+
+          <rect class="box" x="24" y="376" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="397">Rank fusion (RRF)</text>
+          <text class="ts" x="40" y="415">score = Σ 1 / (60 + rank)</text>
+          <text class="tag" x="340" y="397" text-anchor="end">code</text>
+
+          <rect class="box" x="24" y="448" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="469">Sub-category grounding</text>
+          <text class="ts" x="40" y="487">a named product line beats the LLM's guess</text>
+          <text class="tag" x="340" y="469" text-anchor="end">code</text>
+
+          <rect class="box" x="24" y="520" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="541">Evidence ledger</text>
+          <text class="ts" x="40" y="559">verified · contradicted · unknown, per condition</text>
+          <text class="tag" x="340" y="541" text-anchor="end">code</text>
+
+          <rect class="box" x="24" y="592" width="330" height="50" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="40" y="613">Outcome</text>
+          <text class="ts" x="40" y="631">results · no match · not sold · policy</text>
+          <text class="tag" x="340" y="613" text-anchor="end">code</text>
+
+          <rect class="box end" x="24" y="664" width="330" height="50" rx="8" fill="#FFFFFF"/>
+          <text class="t" x="40" y="685">Search UI and Debug tab</text>
+          <text class="ts" x="40" y="703">product cards, details, full trace</text>
+          <text class="tag" x="340" y="685" text-anchor="end">output</text>
+
+          <!-- arrows with what moves between stages -->
+          <line class="arrow" x1="189" y1="66" x2="189" y2="85" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="81">text</text>
+          <line class="arrow" x1="189" y1="138" x2="189" y2="157" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="153">text + name hints</text>
+          <line class="arrow" x1="189" y1="210" x2="189" y2="229" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="225">JSON plan</text>
+          <line class="arrow" x1="189" y1="282" x2="189" y2="301" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="297">checked plan</text>
+          <line class="arrow" x1="189" y1="354" x2="189" y2="373" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="369">2 × 5,000 scores</text>
+          <line class="arrow" x1="189" y1="426" x2="189" y2="445" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="441">one fused ranking</text>
+          <line class="arrow" x1="189" y1="498" x2="189" y2="517" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="513">candidates</text>
+          <line class="arrow" x1="189" y1="570" x2="189" y2="589" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="585">ledger per product</text>
+          <line class="arrow" x1="189" y1="642" x2="189" y2="661" marker-end="url(#ah)" stroke="#56677F"/>
+          <text class="al" x="199" y="657">outcome + top products</text>
+
+          <!-- guards -->
+          <line class="dash" x1="354" y1="113" x2="384" y2="113" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="117">Hints only. The shopper's text is never rewritten.</text>
+
+          <line class="dash" x1="354" y1="185" x2="384" y2="185" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="181">The only probabilistic step. Schema enums limit it to</text>
+          <text class="gs" x="392" y="198">real sub-categories and field names; Pydantic re-validates.</text>
+
+          <line class="dash" x1="354" y1="257" x2="384" y2="257" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="253">Drops numbers the shopper never typed (“cheapest” → price ≤ 0).</text>
+          <text class="gs" x="392" y="270">Drops values a field never takes (age_group “kids”).</text>
+
+          <line class="dash" x1="354" y1="329" x2="384" y2="329" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="333">A bad rewrite can't hide a product: the raw text still searches.</text>
+
+          <line class="dash" x1="354" y1="401" x2="384" y2="401" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="405">Fuses rank positions; scores from different queries are never added.</text>
+
+          <line class="dash" x1="354" y1="473" x2="384" y2="473" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="469">LLM restriction is dropped if both searches rank</text>
+          <text class="gs" x="392" y="486">its best product below 50th of 5,000.</text>
+
+          <line class="dash" x1="354" y1="545" x2="384" y2="545" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="541">Missing ≠ false. Colours and materials match exactly.</text>
+          <text class="gs" x="392" y="558">No warranty listed means none (policy §3.1).</text>
+
+          <line class="dash" x1="354" y1="617" x2="384" y2="617" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="621">Contradicted products never appear beside real matches.</text>
+
+          <line class="dash" x1="354" y1="689" x2="384" y2="689" stroke="#D8E0EB"/>
+          <text class="g" x="392" y="685">Every price and spec read from the record.</text>
+          <text class="gs" x="392" y="702">Debug shows the LLM's plan exactly as returned.</text>
+        </svg>
+      </div>
+      <figcaption><b>Figure 1.</b> One LLM call per question; every later stage is code or a fixed embedding model.
+        The right column is the guard each stage adds against stating something the catalogue does not say.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Decisions we made, and the evidence</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Decision</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>LLM first</td><td>Descriptions such as “baal sukhane wali machine” fail with embeddings alone: hit@1 rose from 0.51 to 0.89 when the LLM interprets first.</td></tr>
+          <tr><td>Search twice, then fuse</td><td>The LLM's phrase alone loses named products (dev hit@1 0.85 vs 0.93 for raw text). Fusing both keeps the best of each.</td></tr>
+          <tr><td>Catalogue picks the sub-category</td><td>The LLM guesses product types from brand names wrongly (“Funkari TerraFusion” called a jigsaw puzzle). Trusting it alone cut named-product hit@1 to 0.78.</td></tr>
+          <tr><td>No reranker</td><td>A correct product is already in the top 30 for every probe query. A reranker scores relevance and cannot tell a 50 ml from a 150 ml variant, which is a clarify case.</td></tr>
+          <tr><td>No vector database</td><td>5,000 × 1,024 floats is about 20 MB; a NumPy dot product over all of it takes about 1 ms.</td></tr>
+          <tr><td>LLM thinking off</td><td>Thinking mode used about 2,000 tokens and 28 s per question with no better JSON. Without it: about 120 output tokens.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Measured retrieval quality</h2>
+    <figure>
+      <div class="legend">
+        <span><i style="background: var(--bar-raw)"></i>Raw text only</span>
+        <span><i style="background: var(--bar-llm)"></i>LLM phrase only</span>
+        <span><i style="background: var(--accent)"></i>Final: both, fused and grounded</span>
+      </div>
+      <div class="bars" role="img" aria-label="Hit at 1 by query set. Twisted descriptions: raw 0.51, LLM only 0.89, final 0.89. Generated named products: raw 0.97, LLM only 0.89, final 1.00. Dev questions: raw 0.93, LLM only 0.85, final 0.93.">
+        <div class="lbl">Twisted descriptions<small>35 hand-written, no product names</small></div>
+        <div class="trio">
+          <div class="bar raw"><i style="width: 51.4%"></i><span>0.514</span></div>
+          <div class="bar llm"><i style="width: 88.6%"></i><span>0.886</span></div>
+          <div class="bar fin"><i style="width: 88.6%"></i><span>0.886</span></div>
+        </div>
+        <div class="lbl">Misspelt product names<small>200 generated from catalogue titles</small></div>
+        <div class="trio">
+          <div class="bar raw"><i style="width: 96.5%"></i><span>0.965</span></div>
+          <div class="bar llm"><i style="width: 88.5%"></i><span>0.885</span></div>
+          <div class="bar fin"><i style="width: 100%"></i><span>1.000</span></div>
+        </div>
+        <div class="lbl">Dev questions<small>27 single-turn with known products</small></div>
+        <div class="trio">
+          <div class="bar raw"><i style="width: 92.6%"></i><span>0.926</span></div>
+          <div class="bar llm"><i style="width: 85.2%"></i><span>0.852</span></div>
+          <div class="bar fin"><i style="width: 92.6%"></i><span>0.926</span></div>
+        </div>
+      </div>
+      <figcaption><b>Figure 2.</b> hit@1: share of questions whose top result is a correct product (bars to scale, 0 to 1).
+        Raw text fails on descriptions, the LLM phrase alone fails on names, and the final pipeline is best or tied on all three sets.
+        Also measured: precision of the top 10 on twisted questions rose from 0.49 to 0.88, and all 16 requests for
+        things the store doesn't sell were recognised.</figcaption>
+    </figure>
+    <div class="facts">
+      <div><b>≈ 3,000 / 120</b><span>LLM tokens in / out per question</span></div>
+      <div><b>1.5 – 2.5 s</b><span>per question on a healthy server; the LLM call is ~90% of it</span></div>
+      <div><b>≈ 1 ms</b><span>similarity search over all 5,000 products</span></div>
+      <div><b>262</b><span>probe queries re-run after every change</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How the outcome is decided</h2>
+    <figure>
+      <div class="fig-scroll">
+        <svg viewBox="0 0 880 716" role="img" aria-label="Outcome flow: policy questions go to a policy answer; requests with no store sub-category and no catalogue brand are refused; unknown brands get a notice; every candidate is checked; if nothing satisfies the conditions the closest products are shown as no match; a lookup whose matches differ in what was asked becomes a clarify question; otherwise the top products are the answer.">
+          <defs>
+            <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" class="ahead" fill="#56677F"/>
+            </marker>
+          </defs>
+
+          <rect class="box" x="80" y="8" width="300" height="40" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="230" y="33" text-anchor="middle">Checked plan + ranked candidates</text>
+          <line class="arrow" x1="230" y1="48" x2="230" y2="67" marker-end="url(#ah2)" stroke="#56677F"/>
+
+          <!-- D1 policy -->
+          <polygon class="dia" points="230,70 380,102 230,134 80,102" fill="#FFFFFF"/>
+          <text class="g" x="230" y="106" text-anchor="middle">Policy question?</text>
+          <line class="arrow" x1="380" y1="102" x2="477" y2="102" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="428" y="96" text-anchor="middle">yes</text>
+          <rect class="box" x="480" y="80" width="376" height="44" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="496" y="99">Policy answer with § citation</text>
+          <text class="tag act" x="496" y="115">answer · next phase</text>
+          <line class="arrow" x1="230" y1="134" x2="230" y2="159" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="240" y="151">no</text>
+
+          <!-- D2 not sold -->
+          <polygon class="dia" points="230,162 380,194 230,226 80,194" fill="#FFFFFF"/>
+          <text class="g" x="230" y="190" text-anchor="middle">No store sub-category and</text>
+          <text class="g" x="230" y="205" text-anchor="middle">no catalogue brand or line?</text>
+          <line class="arrow" x1="380" y1="194" x2="477" y2="194" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="428" y="188" text-anchor="middle">yes</text>
+          <rect class="box" x="480" y="172" width="376" height="44" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="496" y="191">“We don't sell this”</text>
+          <text class="tag act" x="496" y="207">refuse</text>
+          <line class="arrow" x1="230" y1="226" x2="230" y2="251" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="240" y="243">no</text>
+
+          <!-- D3 unknown brand -->
+          <polygon class="dia" points="230,254 380,286 230,318 80,286" fill="#FFFFFF"/>
+          <text class="g" x="230" y="282" text-anchor="middle">Brand named that</text>
+          <text class="g" x="230" y="297" text-anchor="middle">we don't carry?</text>
+          <line class="arrow" x1="380" y1="286" x2="477" y2="286" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="428" y="280" text-anchor="middle">yes</text>
+          <rect class="box" x="480" y="264" width="376" height="44" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="496" y="283">Notice: “We don't carry Nike”</text>
+          <text class="tag" x="496" y="299">then search other brands</text>
+          <path class="dash ret" d="M668,308 L668,366 L384,366" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="676" y="342">continue</text>
+          <line class="arrow" x1="230" y1="318" x2="230" y2="343" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="240" y="335">no</text>
+
+          <!-- check all candidates -->
+          <rect class="box" x="80" y="346" width="300" height="40" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="230" y="371" text-anchor="middle">Check every condition on every candidate</text>
+          <line class="arrow" x1="230" y1="386" x2="230" y2="407" marker-end="url(#ah2)" stroke="#56677F"/>
+
+          <!-- D4 any match -->
+          <polygon class="dia" points="230,410 380,442 230,474 80,442" fill="#FFFFFF"/>
+          <text class="g" x="230" y="438" text-anchor="middle">Any product with no</text>
+          <text class="g" x="230" y="453" text-anchor="middle">contradicted condition?</text>
+          <line class="arrow" x1="380" y1="442" x2="477" y2="442" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="428" y="436" text-anchor="middle">no</text>
+          <rect class="box" x="480" y="420" width="376" height="44" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="496" y="439">No match: closest shown, mismatches marked</text>
+          <text class="tag act" x="496" y="455">refuse</text>
+          <line class="arrow" x1="230" y1="474" x2="230" y2="499" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="240" y="491">yes</text>
+
+          <rect class="box" x="80" y="502" width="300" height="40" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="230" y="527" text-anchor="middle">Matches first, then “not listed”</text>
+          <line class="arrow" x1="230" y1="542" x2="230" y2="563" marker-end="url(#ah2)" stroke="#56677F"/>
+
+          <!-- D5 clarify -->
+          <polygon class="dia" points="230,566 380,598 230,630 80,598" fill="#FFFFFF"/>
+          <text class="g" x="230" y="594" text-anchor="middle">Lookup with ≥ 2 matches that</text>
+          <text class="g" x="230" y="609" text-anchor="middle">differ in what was asked?</text>
+          <line class="arrow" x1="380" y1="598" x2="477" y2="598" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="428" y="592" text-anchor="middle">yes</text>
+          <rect class="box" x="480" y="576" width="376" height="44" rx="8" fill="#F2F5FA"/>
+          <text class="t" x="496" y="595">Ask “Which one do you mean?”</text>
+          <text class="tag act" x="496" y="611">clarify</text>
+          <line class="arrow" x1="230" y1="630" x2="230" y2="655" marker-end="url(#ah2)" stroke="#56677F"/>
+          <text class="al" x="240" y="647">no</text>
+
+          <rect class="box end" x="80" y="658" width="300" height="44" rx="8" fill="#FFFFFF"/>
+          <text class="t" x="230" y="677" text-anchor="middle">Top products with evidence</text>
+          <text class="tag act" x="230" y="693" text-anchor="middle">answer</text>
+        </svg>
+      </div>
+      <figcaption><b>Figure 3.</b> Every branch is a rule in code, in this order. Blue labels are the competition action
+        each branch maps to. The demo UI already shows these states; writing them into the submission file is the next phase.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Which source decides the sub-category</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>The shopper named</th><th>Sub-categories searched</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Brand and product line</td><td>Whatever the catalogue lists for that line. The LLM's guess is ignored.</td><td><code>funkari terrafusion 500 piece</code> → Building Blocks</td></tr>
+          <tr><td>Only a line name</td><td>The line's sub-categories, plus the LLM's if they conflict</td><td><code>rang</code> is a line name and a Hindi word</td></tr>
+          <tr><td>Only a description</td><td>The LLM's sub-categories, unless both searches disagree strongly</td><td><code>kapde press karne wala</code> → Irons</td></tr>
+          <tr><td>Nothing the store sells</td><td>None. Refuse.</td><td><code>silver payal dikhao</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="two">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2>Stack</h2>
+      <ul class="tight">
+        <li><b>LLM:</b> Qwen3.5-9B Instruct, GGUF Q4_K_M, served by Ollama on a LAN GPU server. Thinking off, 8,192-token context.</li>
+        <li><b>Embeddings:</b> <code>qwen3-embedding:0.6b</code>, 1,024 dimensions, normalised. Instruction prefix on queries only.</li>
+        <li><b>Index:</b> NumPy matrix cached as <code>.npy</code>; rebuilt automatically when the catalogue or model changes.</li>
+        <li><b>Also:</b> RapidFuzz for names, Pydantic for the plan schema, NiceGUI for the UI, uv with Python 3.13.</li>
+      </ul>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2>Run it</h2>
+      <pre><span class="c"># web UI → http://localhost:8080</span>
+cd FULL_CODE
+uv run python -m app.main
+
+<span class="c"># terminal search with full trace</span>
+uv run python -m src.search_cli "cheapest nike shoes"
+
+<span class="c"># retrieval quality on 262 probe queries</span>
+uv run python -m src.evaluation.retrieval_probe</pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where the code lives</h2>
+    <pre>FULL_CODE/
+  src/config.py                        <span class="c">server URL, model names, paths (env-overridable)</span>
+  src/models/llm.py                    <span class="c">schema-constrained JSON calls, retry, token and latency counts</span>
+  src/models/embedder.py               <span class="c">batched embeddings, query instruction</span>
+  src/preprocessing/products.py        <span class="c">catalogue loading, search text, vocabulary</span>
+  src/retrieval/name_matcher.py        <span class="c">fuzzy brand and line hints</span>
+  src/retrieval/dense.py               <span class="c">cached embedding index</span>
+  src/retrieval/product_search.py      <span class="c">dual search, RRF, sub-category grounding</span>
+  src/conversation/query_interpreter.py  <span class="c">LLM plan, prompt, code checks</span>
+  src/verification/evidence.py         <span class="c">Evidence Ledger</span>
+  src/search_service.py                <span class="c">the pipeline the UI calls</span>
+  src/evaluation/                      <span class="c">retrieval probe and probe query sets</span>
+  app/                                 <span class="c">NiceGUI UI: main, product_view, debug_view, theme</span></pre>
+  </section>
+
+  <section>
+    <h2>Status</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Part</th><th>State</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Query interpretation</td><td><span class="status done">done</span></td><td>LLM plan with code checks on numbers, colours and catalogue values</td></tr>
+          <tr><td>Product retrieval</td><td><span class="status done">done</span></td><td>Dual search, RRF, grounding, disagreement guard</td></tr>
+          <tr><td>Evidence Ledger</td><td><span class="status done">done</span></td><td>Conditions and asked fields, three states, source field recorded</td></tr>
+          <tr><td>Demo UI</td><td><span class="status done">done</span></td><td>Search and Debug tabs</td></tr>
+          <tr><td>Answer / clarify / refuse</td><td><span class="status done">done</span></td><td>Figure 3 as code, following README §6</td></tr>
+          <tr><td>Response writer</td><td><span class="status done">done</span></td><td>Code fills IDs, <code>stated_prices</code>, <code>stated_facts</code> and the text from templates; price guard before output</td></tr>
+          <tr><td>Policy answers</td><td><span class="status done">done</span></td><td>LLM picks a real section ID or says the policy doesn't cover it</td></tr>
+          <tr><td>Multi-turn</td><td><span class="status done">done</span></td><td>Earlier turns passed to the interpreter; budgets typed earlier still count</td></tr>
+          <tr><td>Submission and score</td><td><span class="status done">done</span></td><td>Dev score 1.000 with <code>evaluate.py</code> (baseline 0.73), 0 hallucinated prices; test file written</td></tr>
+          <tr><td>Material backstop</td><td><span class="status next">next</span></td><td>Code check for material words the LLM drops</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Known risks</h2>
+    <ul class="tight prose">
+      <li><b>Offline rule.</b> Models must run offline during judging. Confirm with the organisers that a LAN server counts.</li>
+      <li><b>Server stability.</b> On 30 Oct the GPU slowed from 73 to about 16 tokens/s and crashed once with a CUDA error. Check it before any demo.</li>
+      <li><b>Material words.</b> The LLM sometimes drops a material (“red silk saree”). Colour has a code backstop; material does not yet.</li>
+      <li><b>Small labelled set.</b> Only 40 dev questions have answers. Our probe sets are self-written, so their numbers may flatter us.</li>
+    </ul>
+  </section>
+
+  <footer>Prepared for team dino (1086), 31 Oct 2026. Figures come from <code>src/evaluation/retrieval_probe.py</code> and the dev set; the catalogue and policy are synthetic data from the competition pack.</footer>
+</main>
