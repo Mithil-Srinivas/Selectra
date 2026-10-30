@@ -9,7 +9,6 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -51,11 +50,11 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         clone = Path(tmp) / name
         subprocess.run(["git", "clone", "--quiet", str(ROOT), str(clone)], check=True)
-        shutil.rmtree(clone / ".git", ignore_errors=True)
         out = ROOT / f"{name}.zip"
         with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
             for p in sorted(clone.rglob("*")):
-                if p.is_file():
+                # skip git's own metadata (deleting it fails on Windows: its object files are read-only)
+                if p.is_file() and ".git" not in p.relative_to(clone).parts:
                     z.write(p, Path(name) / p.relative_to(clone))
     top = sorted({Path(n).parts[1] for n in zipfile.ZipFile(out).namelist() if len(Path(n).parts) > 1})
     print(f"wrote {out}; top level: {top}")
